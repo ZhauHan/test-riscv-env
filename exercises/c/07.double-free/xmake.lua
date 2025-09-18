@@ -1,14 +1,14 @@
 
-local semihosting_specs = "/opt/riscv/riscv-none-elf/lib/semihost.specs"
+local semihosting_specs = "/opt/riscv/riscv32-unknown-elf/lib/semihost.specs"
 
 -- Define custom toolchain
-toolchain("riscv-none-elf")
+toolchain("riscv32-unknown-elf")
     set_kind("standalone")
 
-    set_toolset("cc", "riscv-none-elf-gcc")
-    set_toolset("cxx", "riscv-none-elf-g++")
-    set_toolset("ld", "riscv-none-elf-gcc")
-    set_toolset("as", "riscv-none-elf-as")
+    set_toolset("cc", "riscv32-unknown-elf-gcc")
+    set_toolset("cxx", "riscv32-unknown-elf-g++")
+    set_toolset("ld", "riscv32-unknown-elf-gcc")
+    set_toolset("as", "riscv32-unknown-elf-as")
 
     on_load(function (toolchain)
         local default_flags = {
@@ -35,7 +35,7 @@ option("debug_run")
 
 target("testing")
     set_kind("binary")
-    set_toolchains("riscv-none-elf")
+    set_toolchains("riscv32-unknown-elf")
 
     add_files("double-free.c")
 

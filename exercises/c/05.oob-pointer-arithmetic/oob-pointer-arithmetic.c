@@ -5,6 +5,7 @@ int main() {
     printf("Testing Out-Of-Bounds Pointer Arithmetic (C)...\n");
     int arr[4] = {100, 200, 300, 400};
     printf("Array base: %p\n", (uintptr_t)arr);
+    printf("Array base: %p\n", (uintptr_t)(arr + 4));
 
     /* Make a pointer well past the end via arithmetic */
     int *p = arr + 10; // pointer now points far beyond arr

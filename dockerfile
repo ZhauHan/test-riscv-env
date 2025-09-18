@@ -1,7 +1,7 @@
 # Set this for intel/amd chips
-# ARG CPU_TYPE="x86"
+ARG CPU_TYPE="x86"
 # Set this for apple m-series chips
-ARG CPU_TYPE="arm64"
+# ARG CPU_TYPE="arm64"
 
 FROM ubuntu:22.04 AS builder
 
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     git \
     clang \
+    default-jre \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone mpact sim repo
@@ -33,8 +34,6 @@ RUN if [ "$CPU_TYPE" = "arm64" ]; then \
       exit 1; \
     fi
 
-RUN apt-get update && apt-get install -y default-jre
-
 # Build the simulator
 RUN if [ "$CPU_TYPE" = "arm64" ]; then \
         bazel build --cpu=darwin_arm64 --verbose_failures ...:all //riscv:rv32g_sim; \
@@ -50,24 +49,25 @@ FROM ubuntu:22.04 AS runner
 # Install general dependencies
 RUN apt-get update && apt-get install -y \
     wget \
-    curl \
     git \
+    curl \
     build-essential \
     libreadline-dev \
     libgmp-dev \
     z3 \
     pkg-config \
-    # gcc-riscv64-unknown-elf \
     cmake \
     clang \
     lld \
     && rm -rf /var/lib/apt/lists/*
 
-# Install prebuilt toolchain containing newlib
-RUN wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v14.2.0-3/xpack-riscv-none-elf-gcc-14.2.0-3-linux-arm64.tar.gz
-RUN tar -xzvf xpack-riscv-none-elf-gcc-14.2.0-3-linux-arm64.tar.gz
-RUN rm -rf tar xpack-riscv-none-elf-gcc-14.2.0-3-linux-arm64.tar.gz
-RUN mv xpack-riscv-none-elf-gcc-14.2.0-3 /opt/riscv
+# Install prebuilt RISCV toolchain
+# Note this toolchain only runs on x86 CPUs
+RUN wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-131023/riscv32-unknown-elf.gcc-13.2.0.tar.gz
+RUN mkdir riscv32-unknown-elf-gcc-13.2.0
+RUN tar -xzvf riscv32-unknown-elf.gcc-13.2.0.tar.gz -C riscv32-unknown-elf-gcc-13.2.0
+RUN rm -rf tar riscv32-unknown-elf.gcc-13.2.0.tar.gz
+RUN mv riscv32-unknown-elf-gcc-13.2.0 /opt/riscv
 RUN echo 'export PATH="/opt/riscv/bin:$PATH"' >> ~/.bashrc
 # RUN source ~/.bashrc
 

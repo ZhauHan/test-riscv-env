@@ -7,6 +7,7 @@ int main()
     printf("Testing Out-Of-Bounds Pointer Arithmetic (C++)...\n");
     int arr[4] = {100, 200, 300, 400};
     printf("Array base: %p\n", static_cast<const void*>(arr));
+    printf("Array end: %p\n", static_cast<const void*>(arr + 4));
     int* p = arr + 10;
     printf("Pointer moved to arr + 10: %p\n", static_cast<const void*>(p));
     // Dereferencing p is undefined behaviour on normal hardware.

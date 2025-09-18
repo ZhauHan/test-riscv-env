@@ -6,7 +6,7 @@ int main() {
     int* ptr = (int*)malloc(sizeof(int));
     if (ptr == NULL) {return 0;}
     *ptr = 123;
-    printf("ptr points to memory with value: {}\n", *ptr);
+    printf("ptr points to memory with value: %d\n", *ptr);
 
     free(ptr);
     printf("Memory has been freed.\n");
